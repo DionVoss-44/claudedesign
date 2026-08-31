@@ -30,99 +30,86 @@
 
   /* ---------------- brain point cloud ---------------- */
 
-  function makeParticle(x, y, z, nx, ny, nz, sizeMin, sizeVar) {
-    return {
-      x: x, y: y, z: z,
-      nx: nx, ny: ny, nz: nz, /* approximate surface normal, for contour */
-      color: pickColor(),
-      size: sizeMin + Math.random() * sizeVar,
-      phase: Math.random() * Math.PI * 2,
-      twinkle: 0.5 + Math.random() * 1.2,
-      spin: (Math.random() - 0.5) * 0.9,
-      angle: Math.random() * Math.PI * 2
-    };
+  /* Side-profile brain silhouette, facing left (toward the copy).
+     Normalized coordinates, y up. The particle cloud is sampled inside
+     this polygon so the outline — frontal lobe, crown, occipital curve,
+     cerebellum tuck, brainstem — reads unmistakably at a glance. */
+  var BRAIN_PROFILE = [
+    [-0.78, 0.10], [-0.74, 0.38], [-0.58, 0.60], [-0.30, 0.76],
+    [0.02, 0.82], [0.34, 0.74], [0.60, 0.56], [0.76, 0.30],
+    [0.82, 0.02], [0.76, -0.22], [0.62, -0.34],
+    /* cerebellum notch + lobe */
+    [0.56, -0.30], [0.66, -0.44], [0.60, -0.64], [0.40, -0.72],
+    [0.22, -0.64],
+    /* brainstem */
+    [0.18, -0.70], [0.24, -0.96], [0.06, -0.98], [0.06, -0.66],
+    /* temporal underside back to the forehead */
+    [-0.10, -0.58], [-0.44, -0.50], [-0.66, -0.32], [-0.76, -0.12]
+  ];
+
+  function pointInPolygon(x, y, poly) {
+    var inside = false;
+    for (var i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+      var xi = poly[i][0], yi = poly[i][1];
+      var xj = poly[j][0], yj = poly[j][1];
+      if (yi > y !== yj > y &&
+          x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) {
+        inside = !inside;
+      }
+    }
+    return inside;
+  }
+
+  function distToPolygon(x, y, poly) {
+    var d = Infinity;
+    for (var i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+      var x1 = poly[j][0], y1 = poly[j][1];
+      var x2 = poly[i][0], y2 = poly[i][1];
+      var dx = x2 - x1, dy = y2 - y1;
+      var t = ((x - x1) * dx + (y - y1) * dy) / (dx * dx + dy * dy);
+      t = Math.max(0, Math.min(1, t));
+      var px = x1 + t * dx - x, py = y1 + t * dy - y;
+      var dist = Math.sqrt(px * px + py * py);
+      if (dist < d) d = dist;
+    }
+    return d;
   }
 
   function brainPoints(n) {
     var pts = [];
     var count = 0;
-    while (count < n) {
-      /* random direction on sphere, biased hard toward the shell so the
-         silhouette stays crisp */
-      var u = Math.random() * 2 - 1;
-      var theta = Math.random() * Math.PI * 2;
-      var s = Math.sqrt(1 - u * u);
-      var dx = s * Math.cos(theta);
-      var dy = u;
-      var dz = s * Math.sin(theta);
-      var r = 0.82 + 0.18 * Math.pow(Math.random(), 0.45);
+    var guard = 0;
+    while (count < n && guard < n * 60) {
+      guard++;
+      var x = -0.85 + Math.random() * 1.75;
+      var y = -1.0 + Math.random() * 1.9;
+      if (!pointInPolygon(x, y, BRAIN_PROFILE)) continue;
 
-      /* gyri-like clustering: keep particles preferentially on fold bands */
-      var band =
-        Math.abs(Math.sin(6.5 * dx + 2.1 * dz) * Math.sin(4.5 * dy + 1.3));
-      if (Math.random() > 0.4 + 0.6 * band) continue;
+      var edgeDist = distToPolygon(x, y, BRAIN_PROFILE);
+      var edge = Math.exp(-edgeDist / 0.07); /* 1 at the rim, 0 deep inside */
 
-      var x = dx * r * 1.34; /* cerebrum: wider than tall */
-      var y = dy * r * 0.95;
-      var z = dz * r * 1.02;
+      /* density: strong shell bias + gyri-like interior fold bands */
+      var band = Math.abs(
+        Math.sin(5.2 * x + 2.6 * y) * Math.sin(3.8 * y - 1.7 * x + 1.3)
+      );
+      var keep = 0.16 + 0.72 * edge + 0.3 * band * (1 - edge);
+      if (Math.random() > keep) continue;
 
-      /* frontal/occipital asymmetry: nudge mass forward, taper the back */
-      x += 0.06 * Math.sin(y * 2.0);
+      /* shallow depth so a gentle sway reads as volume, not a sphere */
+      var interior = Math.min(1, edgeDist / 0.18);
+      var z = (Math.random() * 2 - 1) * 0.26 * (0.35 + 0.65 * interior);
 
-      /* flatten the underside (temporal lobes sit low and level) */
-      if (y < -0.5) y = -0.5 + (y + 0.5) * 0.45;
-
-      /* longitudinal fissure: a real cleft down the top centerline */
-      if (Math.abs(x) < 0.18 && y > 0.0) {
-        var push = (0.18 - Math.abs(x)) * (0.55 + 0.45 * y);
-        x += (x >= 0 ? 1 : -1) * push;
-        y -= push * 0.35;
-      }
-
-      /* cortical folds: sinusoidal displacement along the surface */
-      var wob =
-        0.05 * Math.sin(7.0 * x + 2.1 * z) * Math.sin(5.0 * y + 1.3) +
-        0.03 * Math.sin(11.0 * z + 4.0 * y);
-      x += dx * wob;
-      y += dy * wob;
-      z += dz * wob;
-
-      pts.push(makeParticle(x, y, z, dx, dy, dz, 1.5, 2.4));
+      pts.push({
+        x: x, y: y, z: z,
+        edge: edge,
+        color: pickColor(),
+        size: 1.4 + Math.random() * 2.2,
+        phase: Math.random() * Math.PI * 2,
+        twinkle: 0.15 + Math.random() * 0.45,
+        spin: (Math.random() - 0.5) * 0.35,
+        angle: Math.random() * Math.PI * 2
+      });
       count++;
-    }
-
-    /* cerebellum: a denser, finer-grained small lobe tucked low behind */
-    var extra = Math.floor(n * 0.2);
-    for (var i = 0; i < extra; i++) {
-      var u2 = Math.random() * 2 - 1;
-      var t2 = Math.random() * Math.PI * 2;
-      var s2 = Math.sqrt(1 - u2 * u2);
-      var r2 = 0.8 + 0.2 * Math.random();
-      var dx2 = s2 * Math.cos(t2);
-      var dy2 = u2;
-      var dz2 = s2 * Math.sin(t2);
-      pts.push(makeParticle(
-        dx2 * 0.46 * r2 - 0.42,
-        dy2 * 0.3 * r2 - 0.68,
-        dz2 * 0.4 * r2 + 0.1,
-        dx2, dy2, dz2,
-        1.1, 1.6
-      ));
-    }
-
-    /* brainstem: a short taper dropping from beneath the cerebrum */
-    var stem = Math.floor(n * 0.05);
-    for (var j = 0; j < stem; j++) {
-      var t3 = Math.random();
-      var a3 = Math.random() * Math.PI * 2;
-      var rr = (0.16 - t3 * 0.07) * Math.sqrt(Math.random());
-      pts.push(makeParticle(
-        0.18 + Math.cos(a3) * rr + t3 * 0.16,
-        -0.55 - t3 * 0.5,
-        Math.sin(a3) * rr,
-        Math.cos(a3), 0, Math.sin(a3),
-        1.1, 1.4
-      ));
     }
     return pts;
   }
@@ -148,7 +135,7 @@
     var canvas = document.getElementById('constellation');
     if (!canvas) return;
     var ctx = canvas.getContext('2d');
-    var points = brainPoints(2100);
+    var points = brainPoints(2300);
     var w = 0;
     var h = 0;
     var running = true;
@@ -167,13 +154,17 @@
       ctx.clearRect(0, 0, w, h);
       ctx.lineWidth = 1.1;
 
-      var rotY = REDUCED ? 0.4 : t * 0.12;
-      var rotX = 0.12 + (REDUCED ? 0 : Math.sin(t * 0.07) * 0.04);
+      /* gentle sway, never a full rotation — the profile stays legible */
+      var rotY = REDUCED ? 0.12 : 0.2 * Math.sin(t * 0.16);
+      var rotX = 0.04 + (REDUCED ? 0 : Math.sin(t * 0.11) * 0.03);
       var cy = Math.cos(rotY);
       var sy = Math.sin(rotY);
       var cx = Math.cos(rotX);
       var sx = Math.sin(rotX);
-      var scale = Math.min(w, h) * 0.42;
+      /* sized and offset so the cloud clears the headline column and the
+         widest sway never clips the canvas bounds */
+      var scale = Math.min(w * 0.44, h * 0.46);
+      var cxp = w * 0.56;
       var f = 3.2; /* perspective distance */
 
       /* painter-ish ordering is unnecessary for outlined points; draw all */
@@ -186,23 +177,20 @@
         var z2 = p.y * sx + z1 * cx;
 
         var persp = f / (f + z2);
-        var sxp = w * 0.5 + x1 * scale * persp;
+        var sxp = cxp + x1 * scale * persp;
         var syp = h * 0.5 - y1 * scale * persp;
 
-        /* contour emphasis: particles whose surface normal faces sideways
-           (the silhouette rim) draw brighter and larger, so the brain's
-           outline stays defined while the interior stays airy */
-        var nz2r = -p.nx * sy + p.nz * cy; /* rotated normal, Y axis */
-        var nzr = p.ny * sx + nz2r * cx; /* then X axis: view-facing comp */
-        var edge = 1 - Math.min(1, Math.abs(nzr));
-        var edgeBoost = 0.4 + 0.85 * edge * edge;
+        /* contour emphasis: rim particles draw brighter and larger, so
+           the brain's outline stays defined while the interior is airy */
+        var edgeBoost = 0.4 + 0.8 * p.edge;
 
+        /* slow shimmer, not churn: shallow amplitude, slow phase */
         var tw = REDUCED
-          ? 0.8
-          : 0.55 + 0.45 * Math.sin(t * p.twinkle + p.phase);
-        var depth = 0.35 + 0.65 * ((z2 + 1.6) / 3.2);
-        var alpha = Math.max(0.06, Math.min(1, tw * depth * edgeBoost));
-        var size = p.size * persp * (0.8 + 0.45 * edge);
+          ? 0.85
+          : 0.78 + 0.22 * Math.sin(t * p.twinkle + p.phase);
+        var depth = 0.55 + 0.45 * ((z2 + 0.3) / 0.6);
+        var alpha = Math.max(0.08, Math.min(1, tw * depth * edgeBoost));
+        var size = p.size * persp * (0.82 + 0.4 * p.edge);
         var ang = p.angle + (REDUCED ? 0 : t * p.spin);
 
         drawTriangle(ctx, sxp, syp, size, ang, p.color, alpha);

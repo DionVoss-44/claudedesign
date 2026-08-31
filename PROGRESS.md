@@ -12,12 +12,10 @@ preflight).
 
 | Piece | Status | Brief critic | System critic | Craft critic | Rounds |
 |-------|--------|--------------|---------------|--------------|--------|
-| A — Nav + Hero (particle brain) | round 2 built | FAIL | FAIL | FAIL | 2 |
-| B — Problem section | round 2 built | FAIL | FAIL | FAIL | 2 |
-| C — Manifesto (pinned word-reveal) | round 2 built | pass* | pass* | ✓ ("strongest section") | 2 |
-| D — Platform + Closing + Footer | round 2 built | FAIL | FAIL | FAIL | 2 |
-
-\* piece C drew only a legibility note (dim state too dim), no failing verdict of its own.
+| A — Nav + Hero (particle brain) | round 3 built | r2 pass-leaning | **PASS (r2)** | FAIL r2 (brain) | 3 |
+| B — Problem section | round 3 built | r2 note: sparse | **PASS (r2)** | ✓ r2 | 3 |
+| C — Manifesto (pinned word-reveal) | round 3 built | FAIL r2 (fold clip) | **PASS (r2)** | ✓ r2 ("strongest") | 3 |
+| D — Platform + Closing + Footer | round 3 built | ✓ r2 (conversion) | **PASS (r2)** | note: baselines | 3 |
 
 ## Gap history
 
@@ -39,4 +37,21 @@ preflight).
 - Logo mark read as placeholder sliver → three-particle cluster mark
   (violet→teal), favicon updated to match.
 - Manifesto dim state near-illegible → base word alpha 0.16 → 0.24.
+
+**Round 2 → 3** (system PASS; brief FAIL on manifesto fold-clip; craft FAIL
+on brain silhouette):
+- Manifesto overflowed the pinned viewport, closing line unreadable →
+  viewport-clamped type size; the full statement now fits at every capture.
+- Brain read as clipped blob with a straight canvas edge → rebuilt from a
+  side-profile brain silhouette polygon (frontal lobe, crown, occipital,
+  cerebellum tuck, brainstem), shell-biased sampling, rim-emphasized
+  contour, gentle sway instead of rotation, calmer twinkle, offset so it
+  never clips or collides with the headline.
+- Product claimed but never depicted → typographic ask→answer exchange in
+  the platform section (no screenshots — system forbids them).
+- Redundant eyebrow ("Your second brain" over "Unlock your second brain.")
+  → "Introducing Cluster". Nav CTA copy differentiated ("Get access").
+- Closing "Just ask Cluster." read as disabled gray → resolves amber.
+- Logo mark still template-tier → angular shard + amber breakaway particle.
+- Split columns locked to a shared cap line; form baseline aligned.
 

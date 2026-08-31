@@ -235,6 +235,11 @@ main,
   flex-wrap: wrap;
 }
 
+/* optical baseline lock: pill label baseline sits on the input's rule */
+.access-form .btn {
+  margin-bottom: 9px;
+}
+
 .access-input {
   background: transparent;
   border: 0;
@@ -329,7 +334,13 @@ main,
   display: grid;
   grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
   gap: clamp(36px, 6vw, 96px);
-  align-items: end;
+  align-items: start;
+}
+
+/* lock the two columns to a shared cap line: the small label's cap
+   aligns with the big headline's cap */
+.split-head .h-lg {
+  margin-top: -14px;
 }
 
 .split.flip {
@@ -349,7 +360,42 @@ main,
   flex-direction: column;
   align-items: flex-start;
   gap: var(--spacing-24);
-  padding-bottom: var(--spacing-6);
+}
+
+/* ---------- ask/answer exchange (typographic product moment) ---------- */
+
+.exchange {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-24);
+  margin-top: var(--spacing-12);
+}
+
+.exchange-tag {
+  display: block;
+  font-size: var(--text-caption);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--tracking-nav-label);
+  text-transform: uppercase;
+  color: var(--color-ash-gray);
+  margin-bottom: var(--spacing-6);
+}
+
+.exchange-q,
+.exchange-a {
+  font-size: var(--text-heading-2xs);
+  font-weight: var(--font-weight-extralight);
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  max-width: 520px;
+}
+
+.exchange-q {
+  color: var(--color-bone-white);
+}
+
+.exchange-a {
+  color: var(--color-silver-mist);
 }
 
 /* ---------- manifesto ---------- */
@@ -369,10 +415,13 @@ main,
 }
 
 .manifesto-text {
-  font-size: var(--text-heading-lg);
-  line-height: 1.12;
+  /* sized against the viewport so the pinned statement is always fully
+     readable to its last word — never clipped at the fold */
+  font-size: clamp(28px, calc(1.6vw + 3.4vh), 58px);
+  line-height: 1.14;
   font-weight: var(--font-weight-regular);
-  letter-spacing: var(--tracking-display);
+  letter-spacing: -0.045em;
+  font-feature-settings: 'ss01' on;
   max-width: 1180px;
 }
 
@@ -402,7 +451,7 @@ main,
 }
 
 .closing .display .ask {
-  color: var(--color-ash-gray);
+  color: var(--color-saffron-spark);
 }
 
 /* ---------- footer ---------- */
