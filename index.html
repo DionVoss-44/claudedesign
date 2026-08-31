@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Cluster AI — Your business has the answer. Just ask Cluster.</title>
   <meta name="description" content="Cluster is your intelligent, real-time source of truth. We connect your systems behind the scenes and pull together exactly the knowledge you need — just ask.">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M6 27 L27 5 L22 27 Z' fill='%238052ff'/%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 3 L23.5 16 L8.5 16 Z' fill='%239d7bff'/%3E%3Cpath d='M7.5 18.5 L14 29 L2 29 Z' fill='%238052ff'/%3E%3Cpath d='M24.5 18.5 L30 29 L18 29 Z' fill='%2315846e'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="assets/css/tokens.css">
   <link rel="stylesheet" href="assets/css/styles.css">
 </head>
@@ -19,11 +19,15 @@
         <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
           <defs>
             <linearGradient id="brand-grad" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stop-color="#8052ff"/>
+              <stop offset="0" stop-color="#9d7bff"/>
+              <stop offset="0.6" stop-color="#8052ff"/>
               <stop offset="1" stop-color="#15846e"/>
             </linearGradient>
           </defs>
-          <path d="M6 27 L27 5 L22 27 Z" fill="url(#brand-grad)"/>
+          <!-- a cluster of three particles implying one larger form -->
+          <path d="M16 3 L23.5 16 L8.5 16 Z" fill="url(#brand-grad)"/>
+          <path d="M7.5 18.5 L14 29 L2 29 Z" fill="#8052ff" opacity="0.85"/>
+          <path d="M24.5 18.5 L30 29 L18 29 Z" fill="#15846e" opacity="0.9"/>
         </svg>
         <span class="brand-word">Cluster</span>
       </a>
@@ -34,7 +38,7 @@
           <li><a class="ghost-link" data-nav="contact" href="#contact">Contact</a></li>
         </ul>
       </nav>
-      <a class="btn" href="#contact">Request access</a>
+      <a class="ghost-link nav-cta" href="#contact">Request access</a>
     </div>
   </header>
 
@@ -115,7 +119,13 @@
           Your business has the answer.<br>
           <span class="ask">Just ask Cluster.</span>
         </h2>
-        <a class="btn" href="mailto:hello@cluster.ai" data-reveal>Request access</a>
+        <form class="access-form" data-reveal novalidate>
+          <label class="visually-hidden" for="access-email">Work email</label>
+          <input class="access-input" id="access-email" type="email"
+                 name="email" placeholder="Work email" autocomplete="email" required>
+          <button class="btn" type="submit">Request access</button>
+        </form>
+        <p class="access-done" hidden>You're on the list. We'll be in touch — <span class="em-amber">just ask Cluster</span> when you get there.</p>
       </div>
     </section>
 
@@ -127,7 +137,7 @@
       <ul class="footer-links">
         <li><a class="ghost-link" href="#manifesto">Manifesto</a></li>
         <li><a class="ghost-link" href="#platform">Platform</a></li>
-        <li><a class="ghost-link" href="#contact">Contact</a></li>
+        <li><a class="ghost-link" href="mailto:hello@cluster.ai">hello@cluster.ai</a></li>
       </ul>
     </div>
   </footer>

@@ -30,29 +30,53 @@
 
   /* ---------------- brain point cloud ---------------- */
 
+  function makeParticle(x, y, z, nx, ny, nz, sizeMin, sizeVar) {
+    return {
+      x: x, y: y, z: z,
+      nx: nx, ny: ny, nz: nz, /* approximate surface normal, for contour */
+      color: pickColor(),
+      size: sizeMin + Math.random() * sizeVar,
+      phase: Math.random() * Math.PI * 2,
+      twinkle: 0.5 + Math.random() * 1.2,
+      spin: (Math.random() - 0.5) * 0.9,
+      angle: Math.random() * Math.PI * 2
+    };
+  }
+
   function brainPoints(n) {
     var pts = [];
     var count = 0;
     while (count < n) {
-      /* random direction on sphere, biased toward the shell */
+      /* random direction on sphere, biased hard toward the shell so the
+         silhouette stays crisp */
       var u = Math.random() * 2 - 1;
       var theta = Math.random() * Math.PI * 2;
       var s = Math.sqrt(1 - u * u);
       var dx = s * Math.cos(theta);
       var dy = u;
       var dz = s * Math.sin(theta);
-      var r = 0.72 + 0.28 * Math.pow(Math.random(), 0.6);
+      var r = 0.82 + 0.18 * Math.pow(Math.random(), 0.45);
 
-      var x = dx * r * 1.28; /* wider than tall */
-      var y = dy * r * 0.98;
-      var z = dz * r * 1.05;
+      /* gyri-like clustering: keep particles preferentially on fold bands */
+      var band =
+        Math.abs(Math.sin(6.5 * dx + 2.1 * dz) * Math.sin(4.5 * dy + 1.3));
+      if (Math.random() > 0.4 + 0.6 * band) continue;
 
-      /* flatten the underside a little (temporal lobes sit low) */
-      if (y < -0.55) y = -0.55 - (y + 0.55) * 0.35;
+      var x = dx * r * 1.34; /* cerebrum: wider than tall */
+      var y = dy * r * 0.95;
+      var z = dz * r * 1.02;
 
-      /* longitudinal fissure: push particles off the centerline on top */
-      if (Math.abs(x) < 0.14 && y > 0.1) {
-        x += (x >= 0 ? 1 : -1) * (0.14 - Math.abs(x)) * 0.9;
+      /* frontal/occipital asymmetry: nudge mass forward, taper the back */
+      x += 0.06 * Math.sin(y * 2.0);
+
+      /* flatten the underside (temporal lobes sit low and level) */
+      if (y < -0.5) y = -0.5 + (y + 0.5) * 0.45;
+
+      /* longitudinal fissure: a real cleft down the top centerline */
+      if (Math.abs(x) < 0.18 && y > 0.0) {
+        var push = (0.18 - Math.abs(x)) * (0.55 + 0.45 * y);
+        x += (x >= 0 ? 1 : -1) * push;
+        y -= push * 0.35;
       }
 
       /* cortical folds: sinusoidal displacement along the surface */
@@ -63,36 +87,42 @@
       y += dy * wob;
       z += dz * wob;
 
-      pts.push({
-        x: x, y: y, z: z,
-        color: pickColor(),
-        size: 1.6 + Math.random() * 2.6,
-        phase: Math.random() * Math.PI * 2,
-        twinkle: 0.5 + Math.random() * 1.2,
-        spin: (Math.random() - 0.5) * 0.9,
-        angle: Math.random() * Math.PI * 2
-      });
+      pts.push(makeParticle(x, y, z, dx, dy, dz, 1.5, 2.4));
       count++;
     }
 
-    /* cerebellum: a denser small lobe tucked low at the back */
-    var extra = Math.floor(n * 0.16);
+    /* cerebellum: a denser, finer-grained small lobe tucked low behind */
+    var extra = Math.floor(n * 0.2);
     for (var i = 0; i < extra; i++) {
       var u2 = Math.random() * 2 - 1;
       var t2 = Math.random() * Math.PI * 2;
       var s2 = Math.sqrt(1 - u2 * u2);
-      var r2 = 0.75 + 0.25 * Math.random();
-      pts.push({
-        x: s2 * Math.cos(t2) * 0.42 * r2 + 0.0,
-        y: u2 * 0.3 * r2 - 0.62,
-        z: s2 * Math.sin(t2) * 0.38 * r2 - 0.52,
-        color: pickColor(),
-        size: 1.4 + Math.random() * 2.0,
-        phase: Math.random() * Math.PI * 2,
-        twinkle: 0.5 + Math.random() * 1.2,
-        spin: (Math.random() - 0.5) * 0.9,
-        angle: Math.random() * Math.PI * 2
-      });
+      var r2 = 0.8 + 0.2 * Math.random();
+      var dx2 = s2 * Math.cos(t2);
+      var dy2 = u2;
+      var dz2 = s2 * Math.sin(t2);
+      pts.push(makeParticle(
+        dx2 * 0.46 * r2 - 0.42,
+        dy2 * 0.3 * r2 - 0.68,
+        dz2 * 0.4 * r2 + 0.1,
+        dx2, dy2, dz2,
+        1.1, 1.6
+      ));
+    }
+
+    /* brainstem: a short taper dropping from beneath the cerebrum */
+    var stem = Math.floor(n * 0.05);
+    for (var j = 0; j < stem; j++) {
+      var t3 = Math.random();
+      var a3 = Math.random() * Math.PI * 2;
+      var rr = (0.16 - t3 * 0.07) * Math.sqrt(Math.random());
+      pts.push(makeParticle(
+        0.18 + Math.cos(a3) * rr + t3 * 0.16,
+        -0.55 - t3 * 0.5,
+        Math.sin(a3) * rr,
+        Math.cos(a3), 0, Math.sin(a3),
+        1.1, 1.4
+      ));
     }
     return pts;
   }
@@ -118,7 +148,7 @@
     var canvas = document.getElementById('constellation');
     if (!canvas) return;
     var ctx = canvas.getContext('2d');
-    var points = brainPoints(1700);
+    var points = brainPoints(2100);
     var w = 0;
     var h = 0;
     var running = true;
@@ -159,12 +189,20 @@
         var sxp = w * 0.5 + x1 * scale * persp;
         var syp = h * 0.5 - y1 * scale * persp;
 
+        /* contour emphasis: particles whose surface normal faces sideways
+           (the silhouette rim) draw brighter and larger, so the brain's
+           outline stays defined while the interior stays airy */
+        var nz2r = -p.nx * sy + p.nz * cy; /* rotated normal, Y axis */
+        var nzr = p.ny * sx + nz2r * cx; /* then X axis: view-facing comp */
+        var edge = 1 - Math.min(1, Math.abs(nzr));
+        var edgeBoost = 0.4 + 0.85 * edge * edge;
+
         var tw = REDUCED
           ? 0.8
           : 0.55 + 0.45 * Math.sin(t * p.twinkle + p.phase);
         var depth = 0.35 + 0.65 * ((z2 + 1.6) / 3.2);
-        var alpha = Math.max(0.08, Math.min(1, tw * depth));
-        var size = p.size * persp;
+        var alpha = Math.max(0.06, Math.min(1, tw * depth * edgeBoost));
+        var size = p.size * persp * (0.8 + 0.45 * edge);
         var ang = p.angle + (REDUCED ? 0 : t * p.spin);
 
         drawTriangle(ctx, sxp, syp, size, ang, p.color, alpha);

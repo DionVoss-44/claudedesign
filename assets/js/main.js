@@ -8,6 +8,22 @@
 
   document.documentElement.classList.remove('no-js');
 
+  /* access form: swap to confirmation on submit (works with or without
+     motion — static site, so capture is a front-end acknowledgment) */
+  var accessForm = document.querySelector('.access-form');
+  if (accessForm) {
+    accessForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var input = accessForm.querySelector('.access-input');
+      if (!input.value || input.validity.typeMismatch || input.value.indexOf('@') === -1) {
+        input.focus();
+        return;
+      }
+      accessForm.hidden = true;
+      document.querySelector('.access-done').hidden = false;
+    });
+  }
+
   var REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (REDUCED || !window.gsap) {
     document.documentElement.classList.add('reduced-motion');
