@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cluster AI — Your business has the answer. Just ask Cluster.</title>
+  <meta name="description" content="Cluster is your intelligent, real-time source of truth. We connect your systems behind the scenes and pull together exactly the knowledge you need — just ask.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M6 27 L27 5 L22 27 Z' fill='%238052ff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="assets/css/tokens.css">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+
+  <canvas id="ambient" aria-hidden="true"></canvas>
+
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="#top" aria-label="Cluster AI home">
+        <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+          <defs>
+            <linearGradient id="brand-grad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#8052ff"/>
+              <stop offset="1" stop-color="#15846e"/>
+            </linearGradient>
+          </defs>
+          <path d="M6 27 L27 5 L22 27 Z" fill="url(#brand-grad)"/>
+        </svg>
+        <span class="brand-word">Cluster</span>
+      </a>
+      <nav aria-label="Primary">
+        <ul class="nav-links">
+          <li><a class="ghost-link" data-nav="manifesto" href="#manifesto">Manifesto</a></li>
+          <li><a class="ghost-link" data-nav="platform" href="#platform">Platform</a></li>
+          <li><a class="ghost-link" data-nav="contact" href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+      <a class="btn" href="#contact">Request access</a>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- HERO -->
+    <section class="hero wrap" aria-label="Introduction">
+      <div class="hero-copy">
+        <span class="label" data-reveal>Your second brain</span>
+        <h1 class="display" data-reveal>Unlock your second&nbsp;brain.</h1>
+        <p class="body-copy" data-reveal>
+          Stop hunting for answers. Start using them. Cluster connects to every
+          system your business runs on and turns scattered knowledge into
+          instant, confident answers.
+        </p>
+        <a class="btn" href="#contact" data-reveal>Request access</a>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <canvas id="constellation"></canvas>
+      </div>
+    </section>
+
+    <!-- PROBLEM -->
+    <section class="section" aria-label="The problem">
+      <div class="wrap split">
+        <div class="split-head">
+          <h2 class="h-lg" data-reveal>Knowledge, splintered.</h2>
+        </div>
+        <div class="split-body">
+          <span class="label" data-reveal>The problem</span>
+          <p class="body-copy" data-reveal>
+            Critical knowledge lives as countless fragments scattered across
+            hundreds of disparate tools. Your team faces the anxiety of
+            bothering a busy coworker again — or aimlessly connecting dots
+            with incomplete context.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- MANIFESTO -->
+    <section class="manifesto" id="manifesto" aria-label="Manifesto">
+      <div class="wrap manifesto-inner">
+        <span class="label">Manifesto</span>
+        <p class="manifesto-text">
+          Cluster is your intelligent, real-time source of truth — eliminating
+          the cultural, financial and operational struggles of splintered
+          tools. We connect your systems behind the scenes and pull together
+          exactly the knowledge you require into one elegant, contextual view.
+          <span class="em">Just ask Cluster</span> for the answer that advances
+          your work — and make every decision with more confidence.
+        </p>
+      </div>
+    </section>
+
+    <!-- PLATFORM -->
+    <section class="section" id="platform" aria-label="The platform">
+      <div class="wrap split flip">
+        <div class="split-head">
+          <h2 class="h-lg" data-reveal>Ask once. Know&nbsp;everything.</h2>
+        </div>
+        <div class="split-body">
+          <span class="label" data-reveal>The platform</span>
+          <p class="body-copy" data-reveal>
+            Docs, chats, tickets, CRMs — Cluster works behind the scenes to
+            assemble exactly what you need into one contextual view, the
+            moment you ask. No more managing knowledge. Only using it.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CLOSING CTA -->
+    <section class="closing" id="contact" aria-label="Request access">
+      <div class="wrap closing-inner">
+        <span class="label" data-reveal>Get started</span>
+        <h2 class="display" data-reveal>
+          Your business has the answer.<br>
+          <span class="ask">Just ask Cluster.</span>
+        </h2>
+        <a class="btn" href="mailto:hello@cluster.ai" data-reveal>Request access</a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <p class="footer-meta">© 2026 Cluster AI — the second brain for business.</p>
+      <ul class="footer-links">
+        <li><a class="ghost-link" href="#manifesto">Manifesto</a></li>
+        <li><a class="ghost-link" href="#platform">Platform</a></li>
+        <li><a class="ghost-link" href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script src="assets/js/vendor/gsap.min.js"></script>
+  <script src="assets/js/vendor/ScrollTrigger.min.js"></script>
+  <script src="assets/js/vendor/lenis.min.js"></script>
+  <script src="assets/js/constellation.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
