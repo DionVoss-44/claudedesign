@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cluster AI — Design System</title>
+  <meta name="description" content="The codified Cluster AI design system: colors, typography, spacing, components.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M15 3.5 L24.5 20 L5.5 20 Z' fill='none' stroke='%238052ff' stroke-width='2'/%3E%3Cpath d='M23 23 L27.5 29.5 L18.5 29.5 Z' fill='none' stroke='%238052ff' stroke-width='1.6'/%3E%3Cpath d='M9.5 23.5 L12.5 28 L6.5 28 Z' fill='%238052ff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="assets/css/tokens.css">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <style>
+    .ds-page { padding-top: 132px; padding-bottom: 96px; }
+    .ds-section { margin-top: 96px; }
+    .ds-section > .label { display: block; margin-bottom: 36px; }
+    .ds-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 30px;
+    }
+    .swatch-chip {
+      height: 96px;
+      border-radius: var(--radius-3xl);
+      margin-bottom: 12px;
+    }
+    .swatch-name {
+      font-size: 15px;
+      font-weight: var(--font-weight-regular);
+      color: var(--color-bone-white);
+    }
+    .swatch-meta {
+      font-size: var(--text-caption);
+      font-weight: var(--font-weight-regular);
+      line-height: var(--leading-caption);
+      color: var(--color-ash-gray);
+      max-width: 300px;
+    }
+    .ds-type-row { margin-bottom: 60px; }
+    .ds-type-row .swatch-meta { margin-top: 6px; }
+    .ds-row {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      flex-wrap: wrap;
+      margin-bottom: 36px;
+    }
+    .space-bar { background: var(--color-electric-iris); height: 12px; border-radius: 2px; }
+    .ds-logo-row { display: flex; align-items: center; gap: 24px; }
+    .ds-logo-row .brand-mark { width: 64px; height: 64px; }
+  </style>
+</head>
+<body>
+
+  <canvas id="ambient" aria-hidden="true"></canvas>
+
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="index.html" aria-label="Cluster AI home">
+        <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+          <path d="M15 3.5 L24.5 20 L5.5 20 Z" fill="none"
+                stroke="#8052ff" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M23 23 L27.5 29.5 L18.5 29.5 Z" fill="none"
+                stroke="#8052ff" stroke-width="1.6" stroke-linejoin="round"/>
+          <path d="M9.5 23.5 L12.5 28 L6.5 28 Z" fill="#8052ff"/>
+        </svg>
+        <span class="brand-word">Cluster</span>
+      </a>
+      <a class="ghost-link nav-cta" href="index.html">Back to site</a>
+    </div>
+  </header>
+
+  <main class="wrap ds-page">
+    <span class="label">Design system</span>
+    <h1 class="h-lg">Scale, void and one violet.</h1>
+    <p class="body-copy" style="margin-top: 24px;">
+      The codified Cluster AI system: pure black canvas, weight-400 headlines
+      that trust scale over weight, feather-light body copy, a single filled
+      violet action and rationed amber sparks. Tokens live in
+      <span style="color:#fff">design-system/</span>.
+    </p>
+
+    <section class="ds-section" aria-label="Colors">
+      <span class="label">Colors</span>
+      <div class="ds-grid">
+        <div>
+          <div class="swatch-chip" style="background:#000000; outline: 1px solid #1c1c1c; outline-offset: -1px;"></div>
+          <p class="swatch-name">Void — #000000</p>
+          <p class="swatch-meta">Page canvas and every section background. Pure black, never dark gray.</p>
+        </div>
+        <div>
+          <div class="swatch-chip" style="background:#ffffff"></div>
+          <p class="swatch-name">Bone White — #ffffff</p>
+          <p class="swatch-meta">Headlines, body text, nav active state.</p>
+        </div>
+        <div>
+          <div class="swatch-chip" style="background:#9a9a9a"></div>
+          <p class="swatch-name">Ash Gray — #9a9a9a</p>
+          <p class="swatch-meta">Muted nav text, ghost links, secondary labels.</p>
+        </div>
+        <div>
+          <div class="swatch-chip" style="background:#bdbdbd"></div>
+          <p class="swatch-name">Silver Mist — #bdbdbd</p>
+          <p class="swatch-meta">Tertiary body text and captions.</p>
+        </div>
+        <div>
+          <div class="swatch-chip" style="background:#8052ff"></div>
+          <p class="swatch-name">Electric Iris — #8052ff</p>
+          <p class="swatch-meta">Primary action buttons, logo mark, brand accents. The only saturated button color.</p>
+        </div>
+        <div>
+          <div class="swatch-chip" style="background:#ffb829"></div>
+          <p class="swatch-name">Saffron Spark — #ffb829</p>
+          <p class="swatch-meta">Uppercase section labels and inline emphasis. Rationed.</p>
+        </div>
+        <div>
+          <div class="swatch-chip" style="background:#15846e"></div>
+          <p class="swatch-name">Deep Verdant — #15846e</p>
+          <p class="swatch-meta">Logo gradient stop and subtle accent washes only. Never a surface.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="ds-section" aria-label="Typography">
+      <span class="label">Typography</span>
+      <div class="ds-type-row">
+        <p class="display">Display 113</p>
+        <p class="swatch-meta">weight 400 · line-height 1.05 · tracking -0.045em · PPNeueMontreal / Inter</p>
+      </div>
+      <div class="ds-type-row">
+        <p class="h-lg">Heading 78</p>
+        <p class="swatch-meta">weight 400 · line-height 1.05 · tracking -0.045em</p>
+      </div>
+      <div class="ds-type-row">
+        <p class="h-md">Heading 42</p>
+        <p class="swatch-meta">weight 400 · line-height 1.2 · tracking -0.045em</p>
+      </div>
+      <div class="ds-type-row">
+        <p class="body-copy">Body 18 — weight 200, the signature feather-light paragraph. Most sites set body at 400; Cluster strips weight so reading feels airy and non-aggressive.</p>
+        <p class="swatch-meta">weight 200 · line-height 1.6</p>
+      </div>
+      <div class="ds-type-row">
+        <p class="label">Nav label 14 — semibold uppercase</p>
+        <p class="swatch-meta">weight 600 · tracking 0.025em · uppercase</p>
+      </div>
+    </section>
+
+    <section class="ds-section" aria-label="Components">
+      <span class="label">Components</span>
+      <div class="ds-row">
+        <a class="btn" href="#">Request early access</a>
+        <a class="ghost-link" href="#">Ghost link</a>
+        <a class="ghost-link is-active" href="#">Ghost link, active</a>
+      </div>
+      <div class="ds-row">
+        <form class="access-form" onsubmit="return false">
+          <label class="visually-hidden" for="ds-email">Work email</label>
+          <input class="access-input" id="ds-email" type="email" placeholder="Work email">
+          <button class="btn" type="submit">Request early access</button>
+        </form>
+      </div>
+      <p class="swatch-meta">One filled violet pill per viewport. No cards, borders or shadows — the email underline is the one functional rule on the page.</p>
+    </section>
+
+    <section class="ds-section" aria-label="Logo">
+      <span class="label">Logo</span>
+      <div class="ds-logo-row">
+        <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+          <path d="M15 3.5 L24.5 20 L5.5 20 Z" fill="none"
+                stroke="#8052ff" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M23 23 L27.5 29.5 L18.5 29.5 Z" fill="none"
+                stroke="#8052ff" stroke-width="1.6" stroke-linejoin="round"/>
+          <path d="M9.5 23.5 L12.5 28 L6.5 28 Z" fill="#8052ff"/>
+        </svg>
+        <p class="swatch-meta">A flat violet cluster of outlined particles — many triangles reading as one form, echoing the constellation. Never gradiented in chrome.</p>
+      </div>
+    </section>
+
+    <section class="ds-section" aria-label="Spacing">
+      <span class="label">Spacing — 6px base unit</span>
+      <div class="ds-row"><div class="space-bar" style="width:6px"></div><p class="swatch-meta">6</p></div>
+      <div class="ds-row"><div class="space-bar" style="width:12px"></div><p class="swatch-meta">12</p></div>
+      <div class="ds-row"><div class="space-bar" style="width:24px"></div><p class="swatch-meta">24</p></div>
+      <div class="ds-row"><div class="space-bar" style="width:36px"></div><p class="swatch-meta">36</p></div>
+      <div class="ds-row"><div class="space-bar" style="width:60px"></div><p class="swatch-meta">60</p></div>
+      <div class="ds-row"><div class="space-bar" style="width:96px"></div><p class="swatch-meta">96</p></div>
+      <div class="ds-row"><div class="space-bar" style="width:120px"></div><p class="swatch-meta">120 — section gaps run 60–120px, page max-width 1280px, radius 24px</p></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <p class="footer-meta">© 2026 Cluster AI — the second brain for business.</p>
+      <ul class="footer-links">
+        <li><a class="ghost-link" href="index.html">Home</a></li>
+        <li><a class="ghost-link" href="index.html#manifesto">Manifesto</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script src="assets/js/constellation.js"></script>
+</body>
+</html>
