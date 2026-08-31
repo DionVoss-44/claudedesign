@@ -8,14 +8,18 @@ live Dala site is blocked by this environment's network policy, so the craft
 critic judges against bar.md mechanisms instead of a blind A/B (declared in
 preflight).
 
-## Pieces
+## Result: ALL THREE CRITICS PASS ✅
 
-| Piece | Status | Brief critic | System critic | Craft critic | Rounds |
-|-------|--------|--------------|---------------|--------------|--------|
-| A — Nav + Hero (particle brain) | round 3 built | r2 pass-leaning | **PASS (r2)** | FAIL r2 (brain) | 3 |
-| B — Problem section | round 3 built | r2 note: sparse | **PASS (r2)** | ✓ r2 | 3 |
-| C — Manifesto (pinned word-reveal) | round 3 built | FAIL r2 (fold clip) | **PASS (r2)** | ✓ r2 ("strongest") | 3 |
-| D — Platform + Closing + Footer | round 3 built | ✓ r2 (conversion) | **PASS (r2)** | note: baselines | 3 |
+| Critic | Verdict | Round |
+|--------|---------|-------|
+| Brief (goal) | **PASS** | 3 |
+| System (design-system.md) | **PASS** | 2 and 3 (re-verified) |
+| Craft (bar.md, 7 mechanisms) | **PASS — 7/7** | 4 |
+
+4 rounds, 10 critic runs total. Remaining craft notes are refinement-level
+(logged below for the next iteration): amber sliver near the hero period,
+brain could carry more multicolor, closing label enters high, platform
+lower-right quadrant dead space.
 
 ## Gap history
 
