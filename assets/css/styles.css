@@ -235,9 +235,9 @@ main,
   flex-wrap: wrap;
 }
 
-/* optical baseline lock: pill label baseline sits on the input's rule */
+/* bottoms flush: the pill sits on the same line as the input's rule */
 .access-form .btn {
-  margin-bottom: 9px;
+  margin-bottom: 0;
 }
 
 .access-input {

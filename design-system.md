@@ -67,8 +67,9 @@ Hierarchy comes from scale, never weight.
 - **Ghost link** — bare text, `#ffffff` or `#9a9a9a`, no container.
 - **Nav bar** — transparent on black. Logo left (violet→teal triangular mark +
   "Cluster" wordmark in white), links center/right at 14px weight-600 uppercase
-  `#9a9a9a` (inactive) / `#ffffff` (active), violet pill CTA far right. No
-  border, no blur.
+  `#9a9a9a` (inactive) / `#ffffff` (active), white text CTA far right. The nav
+  CTA stays a ghost link — never a filled pill — so each viewport carries
+  exactly one filled violet button (the page CTA). No border, no blur.
 - **Section headline block** — two-column asymmetric: oversized left-aligned
   weight-400 headline; 18px weight-200 body (max-width ~520px) in white or
   silver; small amber uppercase label above the body. No boxes.

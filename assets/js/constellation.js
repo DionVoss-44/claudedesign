@@ -177,8 +177,9 @@
         var z2 = p.y * sx + z1 * cx;
 
         var persp = f / (f + z2);
-        var sxp = cxp + x1 * scale * persp;
-        var syp = h * 0.5 - y1 * scale * persp;
+        /* anisotropic: a brain is wider than tall, never a dome */
+        var sxp = cxp + x1 * scale * 1.14 * persp;
+        var syp = h * 0.5 - y1 * scale * 0.92 * persp;
 
         /* contour emphasis: rim particles draw brighter and larger, so
            the brain's outline stays defined while the interior is airy */
