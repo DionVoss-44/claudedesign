@@ -308,6 +308,8 @@ main,
 .hero-visual {
   position: relative;
   height: min(82vh, 760px);
+  /* bleed to the viewport edge so the brain never clips mid-rim */
+  margin-right: calc(-1 * var(--page-gutter));
 }
 
 #constellation {
