@@ -78,7 +78,7 @@
 
     /* ---- sample the artwork ---- */
     var s = document.createElement('canvas');
-    var N = image.width; /* square source */
+    var N = Math.min(image.width, 210); /* cap the sampling lattice; drawImage averages the higher-res source */
     s.width = N; s.height = N;
     var sctx = s.getContext('2d');
     sctx.drawImage(image, 0, 0, N, N);
@@ -88,7 +88,8 @@
     function push(x, y, z, r, g, b, br) {
       pos.push(x, y, z);
       col.push(r, g, b);
-      size.push(0.8 + Math.random() * 0.9);
+      /* bimodal sizes: large outlined triangles plus small bright chips */
+      size.push(Math.random() < 0.72 ? 0.9 + Math.random() * 0.8 : 0.38 + Math.random() * 0.34);
       phase.push(Math.random() * Math.PI * 2);
       bright.push(br);
     }
@@ -96,15 +97,44 @@
       for (var u = 0; u < N; u++) {
         var idx = (v * N + u) * 4;
         var r = data[idx], g = data[idx + 1], b = data[idx + 2];
-        if (r + g + b < 85) continue; /* void */
+        var lum = (r + g + b) / 765;
+        if (lum < 0.12) continue; /* void */
+        /* density follows the artwork's light: the bright rim survives
+           whole, the dark interior keeps only sparse triangles */
+        var keep = lum > 0.3 ? 1 : Math.pow(lum / 0.3, 3) * 0.5;
+        if (Math.random() > keep) continue;
         var x = (u / N - 0.5) * 2.05;
         var y = (0.5 - v / N) * 2.05;
         if (!inPoly(x, y)) continue; /* ambient scraps live on their own layer */
         var d = edgeDist(x, y);
         var zmax = 0.6 * Math.sqrt(Math.min(1, d / 0.32));
-        var rn = r / 255, gn = g / 255, bn = b / 255;
+        /* normalize hue, then snap toward the nearest brand color — the
+           render was generated on the brand palette and downsample
+           averaging drifts its hues */
+        var maxc = Math.max(r, g, b, 1);
+        var rn = r / maxc, gn = g / maxc, bn = b / maxc;
+        var t = null;
+        if (bn >= rn && bn >= gn && bn - Math.min(rn, gn) > 0.18) {
+          t = [0.5, 0.32, 1.0]; /* electric iris */
+        } else if (rn >= gn && gn >= bn && rn - bn > 0.22) {
+          t = [1.0, 0.72, 0.16]; /* saffron spark */
+        } else if (gn >= rn && gn - rn > 0.15) {
+          t = [0.1, 0.72, 0.6]; /* verdant */
+        }
+        if (t) {
+          rn = rn * 0.35 + t[0] * 0.65;
+          gn = gn * 0.35 + t[1] * 0.65;
+          bn = bn * 0.35 + t[2] * 0.65;
+        }
+        var br = 0.3 + 0.7 * Math.min(1, lum * 1.7);
         /* front face carries the artwork verbatim */
-        push(x, y, zmax * (0.75 + Math.random() * 0.25), rn, gn, bn, 1);
+        push(x, y, zmax * (0.75 + Math.random() * 0.25), rn, gn, bn, br);
+        if (keep === 1 && Math.random() < 0.6) {
+          /* thicken the bright rim into the near-solid band of the render */
+          var j = 2.05 / N;
+          push(x + (Math.random() - 0.5) * j * 2.2, y + (Math.random() - 0.5) * j * 2.2,
+            zmax * (0.5 + Math.random() * 0.5), rn, gn, bn, br * 0.85);
+        }
         /* far side: same artwork mirrored through the shell, dimmed —
            gives the hollow look and something to rotate into view */
         if (Math.random() < 0.5) {
@@ -169,7 +199,8 @@
         '  float outline = smoothstep(0.3, 0.04, abs(sd));',
         '  float fill = 0.18 * smoothstep(0.05, -0.5, sd);',
         '  float tw = 0.78 + 0.22 * sin(uTime * (0.6 + vPhase * 0.25) + vPhase * 7.0);',
-        '  float a = (outline + fill) * tw * vBright * uAlpha;',
+        /* 0.62 headroom keeps stacked additive particles from clipping white */
+        '  float a = (outline + fill) * tw * vBright * uAlpha * 0.62;',
         '  if (a < 0.01) discard;',
         '  gl_FragColor = vec4(vColor, a);',
         '}'

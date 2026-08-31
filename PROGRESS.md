@@ -68,3 +68,29 @@ on brain silhouette):
 - Logo mark still template-tier → angular shard + amber breakaway particle.
 - Split columns locked to a shared cap line; form baseline aligned.
 
+## R3F rebuild — brain quality pass (2026-08-31, session continuation)
+
+"Screenshots look terrible" root-caused and fixed:
+
+1. **Tone mapping** — R3F silently applies ACESFilmicToneMapping by
+   default, washing the palette to pastel. Fixed with the `flat` prop on
+   `<Canvas>` (NoToneMapping), per pmndrs/react-three-fiber#1547.
+2. **True source pixels** — the 4K approved render now drives sampling.
+   Egress blocks CloudFront locally, so `.github/workflows/
+   fetch-brain-asset.yml` downloads it on a GitHub Actions runner and
+   commits 512/1024 derivatives to the branch (commit cd8a480). The
+   150px thumbnail placeholder is gone from both builds.
+3. **Sampling now follows the artwork's light** (both builds):
+   luminance-weighted keep (dark interior sparse, bright rim solid),
+   hue normalization + snap toward brand tokens (iris/saffron/verdant),
+   bimodal particle sizes (outlined triangles + solid chips),
+   rim double-push thickening, 0.62 additive-alpha headroom so dense
+   regions stay amber instead of clipping white; bloom retuned
+   (0.4 / threshold 0.55).
+
+Result: hero/manifesto/closing screenshots on the Next+R3F build now
+carry the approved render's character — dark sparse interior, glowing
+amber/violet rim, gold ventral band, brainstem. Vanilla backup carries
+the same sampling upgrades (no bloom pipeline there by design).
+Quality gate: React build judged at/above vanilla; formal /design-loop
+run available on request.

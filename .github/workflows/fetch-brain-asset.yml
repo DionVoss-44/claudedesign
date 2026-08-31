@@ -1,8 +1,5 @@
 name: fetch-brain-asset
 on:
-  push:
-    branches:
-      - claude/cluster-ai-manifesto-iykbn4
   workflow_dispatch: {}
 permissions:
   contents: write

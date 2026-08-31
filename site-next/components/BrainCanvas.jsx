@@ -56,7 +56,9 @@ function edgeDist(x, y) {
 }
 
 function sampleImage(image) {
-  const N = image.width;
+  /* sampling grid is capped: the source render is higher-res than the
+     particle lattice needs, and drawImage downscale averages its colors */
+  const N = Math.min(image.width, 210);
   const c = document.createElement('canvas');
   c.width = N;
   c.height = N;
@@ -83,7 +85,13 @@ function sampleImage(image) {
       rr * Math.sin(a2) * Math.sin(a1)
     );
     col.push(r, g, b);
-    size.push(0.8 + Math.random() * 0.9);
+    /* bimodal sizes to match the approved render: large outlined
+       triangles with a sprinkle of small bright chips */
+    size.push(
+      Math.random() < 0.72
+        ? 0.9 + Math.random() * 0.8
+        : 0.38 + Math.random() * 0.34
+    );
     phase.push(Math.random() * Math.PI * 2);
     bright.push(br);
   };
@@ -94,16 +102,50 @@ function sampleImage(image) {
       const r = data[idx];
       const g = data[idx + 1];
       const b = data[idx + 2];
-      if (r + g + b < 85) continue;
+      const lum = (r + g + b) / 765;
+      if (lum < 0.12) continue;
+      /* density follows the artwork's light: everything on the bright rim
+         survives; the dark interior keeps only sparse triangles */
+      const keep = lum > 0.3 ? 1 : Math.pow(lum / 0.3, 3) * 0.5;
+      if (Math.random() > keep) continue;
       const x = (u / N - 0.5) * 2.05;
       const y = (0.5 - v / N) * 2.05;
       if (!inPoly(x, y)) continue;
       const d = edgeDist(x, y);
       const zmax = 0.6 * Math.sqrt(Math.min(1, d / 0.32));
-      const rn = r / 255;
-      const gn = g / 255;
-      const bn = b / 255;
-      push(x, y, zmax * (0.75 + Math.random() * 0.25), rn, gn, bn, 1);
+      /* normalize hue to full vividness — brightness lives in aBright, so
+         additive stacking glows instead of washing to white — then snap
+         toward the nearest brand color: the render was generated on the
+         brand palette, and downsample averaging drifts its hues */
+      const maxc = Math.max(r, g, b, 1);
+      let rn = r / maxc;
+      let gn = g / maxc;
+      let bn = b / maxc;
+      let target = null;
+      if (bn >= rn && bn >= gn && bn - Math.min(rn, gn) > 0.18) {
+        target = [0.5, 0.32, 1.0]; /* electric iris */
+      } else if (rn >= gn && gn >= bn && rn - bn > 0.22) {
+        target = [1.0, 0.72, 0.16]; /* saffron spark */
+      } else if (gn >= rn && gn - rn > 0.15) {
+        target = [0.1, 0.72, 0.6]; /* verdant */
+      }
+      if (target) {
+        rn = rn * 0.35 + target[0] * 0.65;
+        gn = gn * 0.35 + target[1] * 0.65;
+        bn = bn * 0.35 + target[2] * 0.65;
+      }
+      const br = 0.3 + 0.7 * Math.min(1, lum * 1.7);
+      push(x, y, zmax * (0.75 + Math.random() * 0.25), rn, gn, bn, br);
+      if (keep === 1 && Math.random() < 0.6) {
+        /* thicken the bright rim into the near-solid band of the render */
+        const j = 2.05 / N;
+        push(
+          x + (Math.random() - 0.5) * j * 2.2,
+          y + (Math.random() - 0.5) * j * 2.2,
+          zmax * (0.5 + Math.random() * 0.5),
+          rn, gn, bn, br * 0.85
+        );
+      }
       if (Math.random() < 0.5) {
         push(x, y, -zmax * (0.75 + Math.random() * 0.25), rn, gn, bn, 0.22);
       }
@@ -123,8 +165,9 @@ const vertexShader = /* glsl */ `
   varying vec3 vColor;
   varying float vPhase;
   varying float vBright;
+  varying float vSize;
   void main() {
-    vColor = aColor; vPhase = aPhase; vBright = aBright;
+    vColor = aColor; vPhase = aPhase; vBright = aBright; vSize = aSize;
     /* per-particle stagger on the assembly, seeded by phase */
     float p = clamp(uProgress * 1.35 - vPhase * 0.055, 0.0, 1.0);
     p = p * p * (3.0 - 2.0 * p);
@@ -141,6 +184,7 @@ const fragmentShader = /* glsl */ `
   varying vec3 vColor;
   varying float vPhase;
   varying float vBright;
+  varying float vSize;
   float sdTri(vec2 p) {
     const float k = 1.7320508;
     p.x = abs(p.x) - 0.5; p.y = p.y + 0.5 / k;
@@ -152,9 +196,12 @@ const fragmentShader = /* glsl */ `
     vec2 p = (gl_PointCoord - 0.5) * 2.4;
     float sd = sdTri(vec2(p.x, -p.y));
     float outline = smoothstep(0.3, 0.04, abs(sd));
-    float fill = 0.12 * smoothstep(0.05, -0.5, sd);
+    /* small chips read as solid sparks; large triangles stay outlined */
+    float fill = mix(0.55, 0.12, smoothstep(0.45, 0.95, vSize)) * smoothstep(0.05, -0.5, sd);
     float tw = 0.78 + 0.22 * sin(uTime * (0.6 + vPhase * 0.25) + vPhase * 7.0);
-    float a = (outline + fill) * tw * vBright * uAlpha;
+    /* 0.62 headroom keeps stacked additive particles from clipping to
+       white, so the rim reads amber instead of blown highlights */
+    float a = (outline + fill) * tw * vBright * uAlpha * 0.62;
     if (a < 0.01) discard;
     gl_FragColor = vec4(vColor, a);
   }
@@ -247,6 +294,7 @@ export default function BrainCanvas() {
   return (
     <div className="brain-layer" aria-hidden="true">
       <Canvas
+        flat
         dpr={[1, 2]}
         gl={{ antialias: false, alpha: true, powerPreference: 'high-performance' }}
         camera={{ fov: 35, position: [0, 0, 3.4] }}
@@ -255,9 +303,9 @@ export default function BrainCanvas() {
         {sampled && <Particles sampled={sampled} />}
         <EffectComposer disableNormalPass>
           <Bloom
-            intensity={0.45}
-            luminanceThreshold={0.5}
-            luminanceSmoothing={0.55}
+            intensity={0.4}
+            luminanceThreshold={0.55}
+            luminanceSmoothing={0.5}
             mipmapBlur
             radius={0.55}
           />
