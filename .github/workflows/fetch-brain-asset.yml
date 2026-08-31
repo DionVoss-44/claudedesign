@@ -17,13 +17,18 @@ jobs:
         run: |
           set -e
           curl -sSf -o /tmp/brain-4k.png "https://d8j0ntlcm91z4.cloudfront.net/user_3B4SowMRRlN831ChGVw7Ir1UWA1/hf_20260831_075011_c2e051ac-d4c1-4bdb-88ce-68ee7430fc93.png"
-          identify /tmp/brain-4k.png
+          python3 -m pip install --quiet pillow
           mkdir -p assets/img site-next/public/assets/img
-          convert /tmp/brain-4k.png -resize 512x512 assets/img/brain-source.png
-          convert /tmp/brain-4k.png -resize 1024x1024 assets/img/brain-source-1024.png
+          python3 - <<'EOF'
+          from PIL import Image
+          im = Image.open('/tmp/brain-4k.png').convert('RGB')
+          print('source size:', im.size)
+          im.resize((512, 512), Image.LANCZOS).save('assets/img/brain-source.png')
+          im.resize((1024, 1024), Image.LANCZOS).save('assets/img/brain-source-1024.png')
+          EOF
           cp assets/img/brain-source.png site-next/public/assets/img/brain-source.png
           cp assets/img/brain-source-1024.png site-next/public/assets/img/brain-source-1024.png
-          identify assets/img/brain-source.png assets/img/brain-source-1024.png
+          ls -la assets/img/
       - name: Commit and push
         run: |
           git config user.name "github-actions[bot]"
