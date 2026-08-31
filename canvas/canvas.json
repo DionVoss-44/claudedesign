@@ -1,0 +1,13 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 1440, "h": 900, "title": "Hero" },
+    { "file": "Problem.dc.html", "x": 1560, "y": 0, "w": 1440, "h": 900, "title": "Problem" },
+    { "file": "Manifesto.dc.html", "x": 0, "y": 1040, "w": 1440, "h": 900, "title": "Manifesto" },
+    { "file": "Platform.dc.html", "x": 1560, "y": 1040, "w": 1440, "h": 900, "title": "Platform" },
+    { "file": "Closing.dc.html", "x": 0, "y": 2080, "w": 1440, "h": 900, "title": "Closing" }
+  ],
+  "annotations": [
+    { "id": "tokens-note", "x": 1560, "y": 2080, "w": 320, "text": "Cluster AI tokens\nVoid #000000 · Bone White #ffffff\nElectric Iris #8052ff (one pill per screen)\nSaffron Spark #ffb829 (labels + emphasis, max 2/screen)\nAsh #9a9a9a · Silver #bdbdbd · Verdant #15846e\nType: Inter — headlines 400 @ -0.045em (113/78px), body 200 @ 18px\nRadius 24px / pill · 6px spacing unit · 1280px frame\nLive site: index.html on branch claude/cluster-ai-manifesto-iykbn4" }
+  ],
+  "launch": { "view": "canvas" }
+}
