@@ -54,6 +54,17 @@ a {
   z-index: 0;
 }
 
+/* the brain: a fixed full-viewport layer that travels between sections,
+   driven by scroll — content reads on top of it */
+#constellation {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
 main,
 .nav,
 .footer {
@@ -308,16 +319,6 @@ main,
 .hero-visual {
   position: relative;
   height: min(82vh, 760px);
-  /* bleed to the viewport edge so the brain never clips mid-rim */
-  margin-right: calc(-1 * var(--page-gutter));
-}
-
-#constellation {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
 }
 
 /* ---------- story sections ---------- */

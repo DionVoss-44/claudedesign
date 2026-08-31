@@ -120,6 +120,32 @@
     });
   }
 
+  /* ---------------- brain scroll choreography ---------------- */
+  /* the fixed brain layer travels between sections like the reference:
+     hero right → problem left → dim giant backdrop behind the manifesto
+     → quiet right in platform → back for the closing */
+
+  var brainPose = window.__brainPose;
+  if (brainPose) {
+    [
+      ['section[aria-label="The problem"]', { x: 0.26, y: 0.5, s: 0.95, a: 1, r: 0.9 }],
+      ['.manifesto', { x: 0.5, y: 0.5, s: 1.6, a: 0.12, r: 1.8 }],
+      ['#platform', { x: 0.76, y: 0.48, s: 0.9, a: 0.3, r: 2.7 }],
+      ['#contact', { x: 0.68, y: 0.44, s: 1.15, a: 0.75, r: 3.6 }]
+    ].forEach(function (step) {
+      gsap.to(brainPose, Object.assign({}, step[1], {
+        ease: 'none',
+        immediateRender: false,
+        scrollTrigger: {
+          trigger: step[0],
+          start: 'top bottom',
+          end: 'top top',
+          scrub: 0.6
+        }
+      }));
+    });
+  }
+
   /* ---------------- nav active state ---------------- */
 
   [

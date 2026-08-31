@@ -178,10 +178,13 @@
     var w = 0, h = 0, gw = 0, gh = 0;
     var running = true;
 
+    /* the scroll choreography's puppet strings: viewport-fraction position,
+       scale, alpha, and extra rotation — tweened by GSAP in main.js */
+    var POSE = window.__brainPose = { x: 0.72, y: 0.5, s: 1, a: 1, r: 0 };
+
     function resize() {
-      var rect = canvas.parentElement.getBoundingClientRect();
-      w = Math.max(rect.width, 1);
-      h = Math.max(rect.height, 1);
+      w = window.innerWidth;
+      h = window.innerHeight;
       canvas.width = Math.round(w * DPR);
       canvas.height = Math.round(h * DPR);
       ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
@@ -211,12 +214,12 @@
       ctx.clearRect(0, 0, w, h);
       gtx.clearRect(0, 0, gw, gh);
 
-      var yaw = -0.55 + (REDUCED ? 0 : t * 0.1);
+      var yaw = -0.55 + POSE.r + (REDUCED ? 0 : t * 0.1);
       var pitch = 0.05;
       var cy = Math.cos(yaw), sy = Math.sin(yaw);
       var cp = Math.cos(pitch), sp = Math.sin(pitch);
-      var scale = Math.min(w * 0.33, h * 0.4);
-      var cxp = w * 0.52, cyp = h * 0.45;
+      var scale = Math.min(w * 0.17, h * 0.34) * POSE.s;
+      var cxp = w * POSE.x, cyp = h * POSE.y;
       var f = 3.4;
 
       /* stroke buckets: [famColor][alphaStep] -> Path2D; glow per family */
@@ -253,7 +256,8 @@
           a = 0.07 * p.bright * twk + 0.015;
         }
         a += rim * 0.45;
-        a = Math.max(0.03, Math.min(1, a));
+        a = Math.max(0.03, Math.min(1, a)) * POSE.a;
+        if (a < 0.01) return;
 
         var s = (isDot ? 1.7 : (0.0115 * scale + 1.5) * p.size) * persp * (1 + rim * 0.3);
 
@@ -287,7 +291,7 @@
       }
       ctx.save();
       ctx.globalCompositeOperation = 'lighter';
-      ctx.globalAlpha = 0.26;
+      ctx.globalAlpha = 0.26 * POSE.a;
       ctx.imageSmoothingEnabled = true;
       ctx.drawImage(glow, 0, 0, gw, gh, -6, -6, w + 12, h + 12);
       ctx.restore();
