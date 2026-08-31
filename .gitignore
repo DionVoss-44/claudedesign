@@ -1,1 +1,4 @@
 canvas/cluster-ai-site.html
+site-next/node_modules/
+site-next/.next/
+site-next/out/

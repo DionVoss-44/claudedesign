@@ -1,0 +1,656 @@
+/* Cluster AI design tokens — derived from design-system/variables.css
+   (Refero extended extraction of dala.craftedbygc.com) */
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 200;
+  font-display: swap;
+  src: url('/assets/fonts/inter-latin-200-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/fonts/inter-latin-400-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/assets/fonts/inter-latin-600-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/assets/fonts/inter-latin-700-normal.woff2') format('woff2');
+}
+
+:root {
+  /* Colors */
+  --color-void: #000000;
+  --color-bone-white: #ffffff;
+  --color-ash-gray: #9a9a9a;
+  --color-silver-mist: #bdbdbd;
+  --color-electric-iris: #8052ff;
+  --color-saffron-spark: #ffb829;
+  --color-deep-verdant: #15846e;
+
+  /* Typography — Font Families */
+  --font-sans: 'PPNeueMontreal', 'Inter', ui-sans-serif, system-ui,
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* Typography — Scale */
+  --text-caption: 12px;
+  --leading-caption: 1.5;
+  --text-nav-label: 14px;
+  --leading-nav-label: 1.2;
+  --tracking-nav-label: 0.025em;
+  --text-body: 18px;
+  --leading-body: 1.5;
+  --text-heading-2xs: 24px;
+  --leading-heading-2xs: 1.25;
+  --tracking-heading-2xs: -0.02em;
+  --text-heading-xs: 27px;
+  --leading-heading-xs: 1;
+  --text-subheading: 36px;
+  --leading-subheading: 1.2;
+  --text-heading-sm: clamp(34px, 3.3vw, 42px);
+  --leading-heading-sm: 1.2;
+  --text-heading: clamp(38px, 3.75vw, 48px);
+  --leading-heading: 1.1;
+  --text-heading-lg: clamp(48px, 6.1vw, 78px);
+  --leading-heading-lg: 1.05;
+  --text-display: clamp(56px, 8.85vw, 113px);
+  --leading-display: 1.05;
+  --tracking-display: -0.04em;
+
+  /* Typography — Weights */
+  --font-weight-extralight: 200;
+  --font-weight-regular: 400;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Spacing (base unit 6px) */
+  --spacing-6: 6px;
+  --spacing-12: 12px;
+  --spacing-18: 18px;
+  --spacing-24: 24px;
+  --spacing-30: 30px;
+  --spacing-36: 36px;
+  --spacing-60: 60px;
+  --spacing-96: 96px;
+  --spacing-120: 120px;
+
+  /* Layout */
+  --page-max-width: 1280px;
+  --page-gutter: clamp(24px, 5vw, 60px);
+
+  /* Border Radius */
+  --radius-3xl: 24px;
+  --radius-full: 9999px;
+}
+
+
+/* Cluster AI — styles. The void is the design: pure #000000, no panels,
+   no borders, no shadows. Hierarchy = scale + whitespace. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  color-scheme: dark;
+  background: var(--color-void);
+}
+
+body {
+  background: var(--color-void);
+  color: var(--color-bone-white);
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  font-weight: var(--font-weight-extralight);
+  line-height: var(--leading-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--color-electric-iris);
+  color: var(--color-bone-white);
+}
+
+a {
+  color: var(--color-bone-white);
+  text-decoration: none;
+}
+
+.wrap {
+  max-width: var(--page-max-width);
+  margin: 0 auto;
+  padding-left: var(--page-gutter);
+  padding-right: var(--page-gutter);
+}
+
+/* ---------- ambient particle field ---------- */
+
+#ambient {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* the brain: a fixed full-viewport layer that travels between sections,
+   driven by scroll — content reads on top of it */
+.brain-layer {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+main,
+.nav,
+.footer {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- typography roles ---------- */
+
+.label {
+  display: inline-block;
+  font-size: var(--text-nav-label);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--leading-nav-label);
+  letter-spacing: var(--tracking-nav-label);
+  text-transform: uppercase;
+  color: var(--color-saffron-spark);
+}
+
+.display,
+.h-lg,
+.h-md {
+  font-weight: var(--font-weight-regular);
+  letter-spacing: -0.045em;
+  font-feature-settings: 'ss01' on;
+  text-wrap: balance;
+}
+
+.display {
+  font-size: var(--text-display);
+  line-height: var(--leading-display);
+}
+
+.h-lg {
+  font-size: var(--text-heading-lg);
+  line-height: var(--leading-heading-lg);
+}
+
+.h-md {
+  font-size: var(--text-heading-sm);
+  line-height: var(--leading-heading-sm);
+}
+
+.body-copy {
+  font-size: var(--text-body);
+  font-weight: var(--font-weight-extralight);
+  line-height: 1.6;
+  letter-spacing: 0.005em;
+  color: var(--color-silver-mist);
+  max-width: 520px;
+}
+
+.hero .body-copy {
+  color: var(--color-bone-white);
+}
+
+.body-copy strong {
+  font-weight: var(--font-weight-regular);
+  color: var(--color-bone-white);
+}
+
+/* ---------- buttons ---------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-electric-iris);
+  color: var(--color-bone-white);
+  font-family: var(--font-sans);
+  font-size: var(--text-nav-label);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--tracking-nav-label);
+  text-transform: uppercase;
+  border: 0;
+  border-radius: var(--radius-full);
+  padding: 15px 26px;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.45s ease;
+}
+
+.btn:hover {
+  background: #6f40f2;
+  transform: translateY(-2px);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--color-saffron-spark);
+  outline-offset: 3px;
+}
+
+.ghost-link {
+  font-size: var(--text-nav-label);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--tracking-nav-label);
+  text-transform: uppercase;
+  color: var(--color-ash-gray);
+  transition: color 0.4s ease;
+}
+
+.ghost-link:hover,
+.ghost-link.is-active {
+  color: var(--color-bone-white);
+}
+
+/* ---------- nav ---------- */
+
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+}
+
+/* soft void scrim so scrolling content dissolves under the nav
+   (a continuation of the black canvas, not a panel) */
+.nav::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 -46px 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.96) 0%,
+    rgba(0, 0, 0, 0.75) 55%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  pointer-events: none;
+  z-index: -1;
+}
+
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-24);
+  padding-top: var(--spacing-24);
+  padding-bottom: var(--spacing-24);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-12);
+}
+
+.brand-mark {
+  width: 26px;
+  height: 26px;
+  display: block;
+}
+
+.brand-word {
+  font-size: 18px;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.01em;
+  color: var(--color-bone-white);
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-36);
+  list-style: none;
+}
+
+.nav-cta {
+  color: var(--color-bone-white);
+}
+
+/* ---------- access form ---------- */
+
+.access-form {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--spacing-24);
+  flex-wrap: wrap;
+}
+
+/* bottoms flush: the pill sits on the same line as the input's rule */
+.access-form .btn {
+  margin-bottom: 0;
+}
+
+.access-input {
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 0;
+  color: var(--color-bone-white);
+  font-family: var(--font-sans);
+  font-size: var(--text-heading-2xs);
+  font-weight: var(--font-weight-extralight);
+  line-height: 1.3;
+  padding: var(--spacing-12) 0;
+  width: min(420px, 80vw);
+  outline: none;
+  transition: border-color 0.45s ease;
+}
+
+.access-input::placeholder {
+  color: var(--color-ash-gray);
+}
+
+.access-input:focus {
+  border-color: var(--color-saffron-spark);
+}
+
+.access-done {
+  font-size: var(--text-heading-2xs);
+  font-weight: var(--font-weight-extralight);
+  color: var(--color-bone-white);
+}
+
+.em-amber {
+  color: var(--color-saffron-spark);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- hero ---------- */
+
+.hero {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  align-items: center;
+  gap: var(--spacing-36);
+  padding-top: var(--spacing-96);
+}
+
+.hero-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-30);
+}
+
+.hero-visual {
+  position: relative;
+  height: min(82vh, 760px);
+}
+
+/* ---------- story sections ---------- */
+
+/* one idea per viewport: each story section owns a full screen */
+.section {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  align-content: center;
+  padding-top: var(--spacing-120);
+  padding-bottom: var(--spacing-120);
+}
+
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: clamp(36px, 6vw, 96px);
+  align-items: start;
+}
+
+/* lock the two columns to a shared cap line: the small label's cap
+   aligns with the big headline's cap */
+.split-head .h-lg {
+  margin-top: -14px;
+}
+
+.split.flip {
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+}
+
+.split.flip .split-head {
+  order: 2;
+}
+
+.split.flip .split-body {
+  order: 1;
+}
+
+.split-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-24);
+}
+
+/* ---------- ask/answer exchange (typographic product moment) ---------- */
+
+.exchange {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-24);
+  margin-top: var(--spacing-12);
+}
+
+.exchange-tag {
+  display: block;
+  font-size: var(--text-caption);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--tracking-nav-label);
+  text-transform: uppercase;
+  color: var(--color-ash-gray);
+  margin-bottom: var(--spacing-6);
+}
+
+.exchange-q,
+.exchange-a {
+  font-size: var(--text-heading-2xs);
+  font-weight: var(--font-weight-extralight);
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  max-width: 520px;
+}
+
+.exchange-q {
+  color: var(--color-bone-white);
+}
+
+.exchange-a {
+  color: var(--color-silver-mist);
+}
+
+/* ---------- manifesto ---------- */
+
+.manifesto {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding-top: var(--spacing-120);
+  padding-bottom: var(--spacing-120);
+}
+
+.manifesto-inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-36);
+}
+
+.manifesto-text {
+  /* sized against the viewport so the pinned statement is always fully
+     readable to its last word — never clipped at the fold */
+  font-size: clamp(28px, calc(1.6vw + 3.4vh), 58px);
+  line-height: 1.14;
+  font-weight: var(--font-weight-regular);
+  letter-spacing: -0.045em;
+  font-feature-settings: 'ss01' on;
+  max-width: 1180px;
+}
+
+.manifesto-text .word {
+  color: rgba(255, 255, 255, 0.24);
+  will-change: color;
+}
+
+.manifesto-text .em .word {
+  /* highlighted phrases resolve to amber instead of white */
+}
+
+/* ---------- closing CTA ---------- */
+
+.closing {
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  text-align: left;
+}
+
+.closing-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-30);
+}
+
+.closing .display .ask {
+  color: var(--color-saffron-spark);
+}
+
+/* ---------- footer ---------- */
+
+.footer {
+  padding-top: var(--spacing-60);
+  padding-bottom: var(--spacing-36);
+}
+
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-24);
+  flex-wrap: wrap;
+}
+
+.footer-meta {
+  font-size: var(--text-caption);
+  line-height: var(--leading-caption);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-ash-gray);
+}
+
+.footer-links {
+  display: flex;
+  gap: var(--spacing-30);
+  list-style: none;
+}
+
+.footer-links .ghost-link {
+  font-size: var(--text-caption);
+}
+
+/* ---------- reveal defaults (JS enhances) ---------- */
+
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+.no-js [data-reveal],
+.reduced-motion [data-reveal] {
+  opacity: 1;
+  transform: none;
+}
+
+.reduced-motion .manifesto-text .word {
+  color: var(--color-bone-white);
+}
+
+.reduced-motion .manifesto-text .em .word {
+  color: var(--color-saffron-spark);
+}
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 900px) {
+  .hero {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-12);
+    padding-top: 132px;
+    align-content: start;
+  }
+
+  .hero-visual {
+    height: min(52vh, 480px);
+    order: 2;
+  }
+
+  .split,
+  .split.flip {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .split.flip .split-head {
+    order: 1;
+  }
+
+  .split.flip .split-body {
+    order: 2;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .section {
+    padding-top: var(--spacing-96);
+    padding-bottom: var(--spacing-96);
+  }
+}
+
+
+/* R3F canvas fills its fixed wrapper */
+.brain-layer canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
