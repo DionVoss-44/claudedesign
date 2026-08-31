@@ -1,0 +1,30 @@
+name: fetch-brain-asset
+on:
+  workflow_dispatch: {}
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: claude/cluster-ai-manifesto-iykbn4
+      - name: Download approved render and derive site assets
+        run: |
+          set -e
+          curl -sSf -o /tmp/brain-4k.png "https://d8j0ntlcm91z4.cloudfront.net/user_3B4SowMRRlN831ChGVw7Ir1UWA1/hf_20260831_075011_c2e051ac-d4c1-4bdb-88ce-68ee7430fc93.png"
+          identify /tmp/brain-4k.png
+          mkdir -p assets/img site-next/public/assets/img
+          convert /tmp/brain-4k.png -resize 512x512 assets/img/brain-source.png
+          convert /tmp/brain-4k.png -resize 1024x1024 assets/img/brain-source-1024.png
+          cp assets/img/brain-source.png site-next/public/assets/img/brain-source.png
+          cp assets/img/brain-source-1024.png site-next/public/assets/img/brain-source-1024.png
+          identify assets/img/brain-source.png assets/img/brain-source-1024.png
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/img site-next/public/assets/img
+          git commit -m "Add approved brain render (512 + 1024) as site source assets"
+          git push origin claude/cluster-ai-manifesto-iykbn4
