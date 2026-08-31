@@ -38,7 +38,7 @@
      lower rim like the reference. */
 
   var FAMILIES = [
-    ['#ffb829', '#ffd166', '#f5a623'],          /* amber */
+    ['#ffb829', '#ffd166', '#ffc94d', '#f5a623'],          /* amber */
     ['#8052ff', '#9d7bff', '#6a3df0'],          /* violet */
     ['#f4f1ff', '#cfc8e8', '#ffffff'],          /* white/silver */
     ['#1fbf9e', '#2ad4b0'],                     /* teal */
@@ -49,9 +49,9 @@
   function familyFor(px, py, pz) {
     var v = noise3(px * 2.0 + 7.3, py * 2.0 + 3.1, pz * 2.0 + 11.7);
     /* pull the lower rim toward amber, like the reference's glowing base */
-    v -= Math.max(0, -py - 0.25) * 0.6;
+    v -= Math.max(0, -py - 0.1) * 0.85;
     /* mottle: some particles defect to a neighbor patch's family */
-    if (Math.random() < 0.16) v = Math.random();
+    if (Math.random() < 0.22) v = Math.random();
     if (v < 0.20) return 0;
     if (v < 0.45) return 1;
     if (v < 0.72) return 2;
@@ -84,11 +84,11 @@
     var lat, lon, i;
 
     /* cerebrum shell */
-    var latBands = 66;
+    var latBands = 74;
     for (i = 0; i <= latBands; i++) {
       lat = (-0.47 + (i / latBands) * 0.97) * Math.PI; /* -85°..+90° */
       var ringR = Math.cos(lat);
-      var lonCount = Math.max(6, Math.round(ringR * 132));
+      var lonCount = Math.max(6, Math.round(ringR * 152));
       for (var j = 0; j < lonCount; j++) {
         lon = (j / lonCount) * Math.PI * 2 + (i % 2) * (Math.PI / lonCount);
         var dir = [Math.cos(lat) * Math.cos(lon), Math.sin(lat), Math.cos(lat) * Math.sin(lon)];
@@ -130,7 +130,7 @@
       x: p[0], y: p[1], z: p[2],
       nx: n[0], ny: n[1], nz: n[2],
       fam: fam,
-      keep: Math.random() < 0.32, /* which back-faces stay visible */
+      keep: Math.random() < 0.18, /* which back-faces stay visible */
       color: shades[(Math.random() * shades.length) | 0],
       bright: 0.45 + 0.55 * noise3(p[0] * 2.3 + 31, p[1] * 2.3, p[2] * 2.3),
       up: parity % 2 === 0,
@@ -168,6 +168,7 @@
   /* ---------------- hero renderer ---------------- */
 
   function initConstellation() {
+    if (window.__brainClaimed) return; /* the WebGL artwork renderer owns it */
     var canvas = document.getElementById('constellation');
     if (!canvas) return;
     var ctx = canvas.getContext('2d');
@@ -248,7 +249,7 @@
 
         var twk = REDUCED ? 0.85 : 0.75 + 0.25 * Math.sin(t * p.tw + p.ph);
         var a;
-        if (facing >= 0) a = (0.28 + 0.72 * p.bright) * (0.35 + 0.65 * facing) * twk;
+        if (facing >= 0) a = (0.45 + 0.55 * p.bright) * (0.55 + 0.45 * facing) * twk;
         else {
           /* interior stays dark: only a sparse subset of the far side
              shows through, dimly */
@@ -259,7 +260,7 @@
         a = Math.max(0.03, Math.min(1, a)) * POSE.a;
         if (a < 0.01) return;
 
-        var s = (isDot ? 1.7 : (0.0115 * scale + 1.5) * p.size) * persp * (1 + rim * 0.3);
+        var s = (isDot ? 1.7 : (0.0085 * scale + 1.05) * p.size) * persp * (1 + rim * 0.3);
 
         var step = Math.min(ALPHA_STEPS - 1, Math.floor(a * ALPHA_STEPS));
         var key = p.color + step;
@@ -273,10 +274,10 @@
         }
 
         /* bloom: bright, camera-facing particles feed the glow layer */
-        if (a > 0.62) {
+        if (a > 0.52) {
           var gp = glowPaths[p.color];
           if (!gp) gp = glowPaths[p.color] = new Path2D();
-          gp.rect(sxp / 4 - 1.1, syp / 4 - 1.1, 2.2, 2.2);
+          gp.rect(sxp / 4 - 1.3, syp / 4 - 1.3, 2.6, 2.6);
         }
       }
 
@@ -291,7 +292,7 @@
       }
       ctx.save();
       ctx.globalCompositeOperation = 'lighter';
-      ctx.globalAlpha = 0.26 * POSE.a;
+      ctx.globalAlpha = 0.36 * POSE.a;
       ctx.imageSmoothingEnabled = true;
       ctx.drawImage(glow, 0, 0, gw, gh, -6, -6, w + 12, h + 12);
       ctx.restore();
