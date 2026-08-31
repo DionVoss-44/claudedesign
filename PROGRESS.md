@@ -1,5 +1,14 @@
 # Design Loop — Progress
 
+## Approved brand asset (user pick)
+
+Higgsfield Nano Banana 2 (4K), reference-driven from the user's Dala
+recording — job `c2e051ac-d4c1-4bdb-88ce-68ee7430fc93`, 4096×4096:
+https://d8j0ntlcm91z4.cloudfront.net/user_3B4SowMRRlN831ChGVw7Ir1UWA1/hf_20260831_075011_c2e051ac-d4c1-4bdb-88ce-68ee7430fc93.png
+Queued for when the Higgsfield connector is next attached: Seedance 2.5
+hero intro loop (image + user's screen recording as motion references),
+og-image derivation, and color-sampling this asset to tune the coded brain.
+
 **Goal:** Cluster AI single-page site (second brain for business), built to the
 bar of dala.craftedbygc.com/#manifesto with the Refero extended design system.
 
